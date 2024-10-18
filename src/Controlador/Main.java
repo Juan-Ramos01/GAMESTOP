@@ -23,7 +23,7 @@ public class Main {
 
             if (usuario != null) {
                 System.out.println("¡Bienvenido, " + usuario.getUsuario()+ "!");
-                usuario.mostrarMenu();
+                //Mostrar el inicio
             } else {
                 System.out.println("Usuario o contraseña incorrectos.");
             }
