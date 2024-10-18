@@ -1,13 +1,26 @@
 package Vista;
 
+import Modelo.UsuarioDAO;
 import java.awt.Color;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 public class Login_vista extends javax.swing.JFrame {
+
+    UsuarioDAO cn;
 
     public Login_vista() {
         initComponents();
         this.setLocationRelativeTo(null);
+        cn = new UsuarioDAO("gamestop");
+        cn.conectar();
 
     }
 
@@ -128,6 +141,11 @@ public class Login_vista extends javax.swing.JFrame {
         BtnIniciar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 BtnIniciarMouseEntered(evt);
+            }
+        });
+        BtnIniciar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnIniciarActionPerformed(evt);
             }
         });
         containerBtnIniciar.add(BtnIniciar, java.awt.BorderLayout.CENTER);
@@ -262,6 +280,15 @@ public class Login_vista extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public JTextField getTxtUsuario() {
+        return txtUsuario;
+    }
+
+    public JPasswordField getTxtContraseña() {
+        return txtContraseña;
+    }
+
+
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         setVisible(false);
         RegistroUser_vista rg = new RegistroUser_vista();
@@ -309,6 +336,29 @@ public class Login_vista extends javax.swing.JFrame {
             txtUsuario.setForeground(Color.gray);
         }
     }//GEN-LAST:event_txtContraseñaMousePressed
+
+    private void BtnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnIniciarActionPerformed
+        try {
+            String user = txtUsuario.getText();
+            String password = String.valueOf(txtContraseña.getPassword());
+            String query = "SELECT * FROM usuario WHERE usuario='" + user + "' and password='" + password + "'";
+            Statement st = cn.conectar().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this,
+                        "Bienvenido Sr." + user);
+                txtUsuario.setText("");
+                txtContraseña.setText("");
+
+                //Se muestra una vista nueva (Aun no se ha creado)
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "El usuario no se encuentra en la base de datos");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Login_vista.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_BtnIniciarActionPerformed
 
     public JPanel getjPanel1() {
         return jPanel1;
